@@ -36,7 +36,7 @@ class Ws_Param(object):
 
         # 公共参数(common)
         self.CommonArgs = {"app_id": self.APPID}
-        # 业务参数(business)，更多个性化参数可在官网查看
+        # 业务参数(business)
         self.BusinessArgs = {"domain": "iat", "language": "zh_cn", "accent": "mandarin", "vinfo":1,"vad_eos":10000}
 
     # 生成url
@@ -119,7 +119,7 @@ def on_message(ws, message):
                     tankWar.hero.is_hit_wall = False
                     print("down")
                 elif re.search(".*\u53d1\u5c04.*", result):
-                    # 坦克发子弹
+                    # 说“发射”，坦克发射三发子弹
                     tankWar.hero.shot()
                     sleep(0.5)
                     tankWar.hero.shot()
@@ -127,6 +127,7 @@ def on_message(ws, message):
                     tankWar.hero.shot()
                     print("shot")
                 elif re.search(".*\u505c.*", result):
+                    # 说“停”，坦克停止移动
                     tankWar.hero.is_moving = False
                 print("翻译结果: %s。" % (result))
 
@@ -161,8 +162,8 @@ def on_open(ws):
                         input=True,
                         frames_per_buffer=CHUNK)
 
-        print("- - - - - - - Start Recording ...- - - - - - - ")
-
+        print("- - - - - - - - - 开始录音 ...- - - - - - - - - ")
+        print("请对麦克风说“上” “下” “左” “右” “停”和”发射“来控制坦克")
         # for i in range(0,int(RATE/CHUNK*60)):
         for i in range(0, int(RATE / CHUNK * 60)):
             buf = stream.read(CHUNK)
@@ -222,6 +223,11 @@ from threading import Thread
 
 def run_it():
     while True:
+        """
+        当进程小于等于2（本进程加上坦克大战进程）
+        即调用接口的进程因为一分钟到了或者其他原因断开时
+        重新调用它
+        """
         if threading.activeCount() <= 2:
             Thread(target=run).start()
 

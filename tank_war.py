@@ -154,5 +154,6 @@ class TankWar:
 
     @staticmethod
     def __game_over():
+        print("Game Over!")
         pygame.quit()
         exit()

@@ -155,7 +155,10 @@ class Hero(TankSprite):
 
     def kill(self):
         self.life -= 1
+        if self.life:
+            print("You still have {} lives! Be careful!".format(self.life))
         if not self.life:
+            print("You died!")
             self.is_alive = False
             self.boom()
 
